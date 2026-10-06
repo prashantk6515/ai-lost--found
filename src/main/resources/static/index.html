@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Retrieve | College Lost & Found Management System</title>
+  <meta name="description" content="Centralized College Lost and Found Platform with AI-powered smart matching, ownership claim verification, and real-time campus notifications.">
+  
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top App Navigation Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="#" class="brand-logo" onclick="switchTab('browse'); return false;">
+        <div class="logo-badge">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Campus Retrieve</h1>
+          <span>College Lost & Found System</span>
+        </div>
+      </a>
+
+      <!-- Navigation Tabs -->
+      <nav class="main-nav" id="main-nav">
+        <button class="nav-tab active" id="nav-btn-browse" onclick="switchTab('browse')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Browse Items
+        </button>
+        <button class="nav-tab" id="nav-btn-report-lost" onclick="switchTab('report-lost')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          Report Lost
+        </button>
+        <button class="nav-tab" id="nav-btn-report-found" onclick="switchTab('report-found')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"></path><path d="M2 7h20v5H2z"></path><path d="M12 22V7"></path><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+          Report Found
+        </button>
+        <button class="nav-tab" id="nav-btn-my-activity" onclick="switchTab('my-activity')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+          My Reports & Matches
+        </button>
+        <button class="nav-tab" id="nav-btn-admin" onclick="switchTab('admin')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          Admin Portal
+        </button>
+      </nav>
+
+      <!-- User & Notifications Controls -->
+      <div class="header-actions">
+        <!-- Notification Dropdown Toggle -->
+        <button class="notification-btn" id="notif-toggle-btn" onclick="toggleNotifications()" title="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span class="unread-badge" id="unread-count-badge" style="display: none;">0</span>
+        </button>
+
+        <!-- Dynamic User Auth Section -->
+        <div id="auth-section">
+          <!-- Populated by JS: Either Login button or User Profile Badge -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Notifications Dropdown -->
+    <div class="notification-dropdown" id="notification-dropdown">
+      <div class="notif-header">
+        <h3>Campus Alerts & Matches</h3>
+        <button class="btn-sm btn-outline" onclick="markAllNotificationsAsRead()">Mark all read</button>
+      </div>
+      <div class="notif-list" id="notification-list">
+        <!-- Dynamic notification items -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="main-container">
+
+    <!-- Hero Showcase Section (Shown on Browse Tab) -->
+    <section class="hero-section" id="hero-banner">
+      <div class="hero-content">
+        <div class="hero-pill">
+          <span class="dot"></span>
+          AI-Powered Smart Match Active
+        </div>
+        <h2 class="hero-title">
+          Lost It on Campus? <br>
+          <span class="highlight">We'll Help You Retrieve It.</span>
+        </h2>
+        <p class="hero-desc">
+          A centralized, secure digital recovery registry for students and staff. Report lost valuables, hand in found belongings, view AI-suggested matches, and claim items with ownership proof.
+        </p>
+        <div class="hero-cta">
+          <button class="btn-lg btn-lost" onclick="switchTab('report-lost')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            Report a Lost Item
+          </button>
+          <button class="btn-lg btn-found" onclick="switchTab('report-found')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"></path><path d="M2 7h20v5H2z"></path><path d="M12 22V7"></path></svg>
+            I Found Something
+          </button>
+          <button class="btn-lg btn-outline" onclick="showAuthModal()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+            Quick Demo Login
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Counters Strip -->
+      <div class="stats-strip" id="hero-stats-strip">
+        <div class="stat-item">
+          <span class="stat-num" id="hero-stat-lost">--</span>
+          <span class="stat-label">Lost Reports</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num highlight-found" id="hero-stat-found">--</span>
+          <span class="stat-label">Found Belongings</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num highlight-match" id="hero-stat-matches">--</span>
+          <span class="stat-label">AI Potential Matches</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" id="hero-stat-returned">--</span>
+          <span class="stat-label">Successfully Returned</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 1: BROWSE ITEMS -->
+    <section id="tab-browse" class="tab-content">
+      <!-- Search & Filter Controls -->
+      <div class="glass-panel filter-container">
+        <div class="search-row">
+          <div class="search-input-wrapper">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="search-keyword" placeholder="Search by name, description, location (e.g., 'Wallet', 'AirPods', 'Library', 'Block C')..." oninput="debounceSearch()">
+          </div>
+        </div>
+        <div class="filter-row">
+          <select id="filter-type" class="filter-select" onchange="loadItems()">
+            <option value="">All Types (Lost & Found)</option>
+            <option value="LOST">Lost Items Only</option>
+            <option value="FOUND">Found Items Only</option>
+          </select>
+
+          <select id="filter-category" class="filter-select" onchange="loadItems()">
+            <option value="">All Categories</option>
+            <option value="ELECTRONICS">Electronics (Phones, Laptops, Earbuds)</option>
+            <option value="WALLET_PURSE">Wallets & Purses</option>
+            <option value="ID_CARDS">College IDs & Cards</option>
+            <option value="KEYS">Keys & Keychains</option>
+            <option value="BAGS_BACKPACKS">Bags & Backpacks</option>
+            <option value="BOOKS_STATIONERY">Books & Notes</option>
+            <option value="CLOTHING_ACCESSORIES">Clothing & Accessories</option>
+            <option value="OTHER">Other Belongings</option>
+          </select>
+
+          <select id="filter-status" class="filter-select" onchange="loadItems()">
+            <option value="">All Statuses</option>
+            <option value="LOST">Status: LOST</option>
+            <option value="FOUND">Status: FOUND</option>
+            <option value="MATCHED">Status: MATCHED</option>
+            <option value="CLAIMED">Status: CLAIMED</option>
+            <option value="RETURNED">Status: RETURNED</option>
+          </select>
+
+          <input type="text" id="filter-location" class="filter-select" placeholder="Filter by Location..." oninput="debounceSearch()">
+
+          <input type="date" id="filter-date" class="filter-select" onchange="loadItems()">
+
+          <button class="btn-filter-reset" onclick="resetFilters()">Reset Filters</button>
+        </div>
+      </div>
+
+      <!-- Items Grid Display -->
+      <div class="items-grid" id="items-grid-container">
+        <!-- Dynamically rendered item cards -->
+      </div>
+    </section>
+
+    <!-- TAB 2: REPORT LOST ITEM -->
+    <section id="tab-report-lost" class="tab-content" style="display: none;">
+      <div class="glass-panel form-container">
+        <div class="form-header">
+          <h2>📢 Report a Lost Item</h2>
+          <p>Provide accurate details to help campus staff and students locate your lost belonging.</p>
+        </div>
+
+        <form id="form-lost" onsubmit="submitLostReport(event)">
+          <div class="form-grid">
+            <div class="form-group col-full">
+              <label>Item Name <span class="req">*</span></label>
+              <input type="text" id="lost-name" required placeholder="e.g. Black Fossil Leather Wallet, Blue iPhone 13 Pro">
+            </div>
+
+            <div class="form-group">
+              <label>Category <span class="req">*</span></label>
+              <select id="lost-category" required>
+                <option value="">-- Select Category --</option>
+                <option value="ELECTRONICS">Electronics (Phones, Laptops, Earbuds)</option>
+                <option value="WALLET_PURSE">Wallets & Purses</option>
+                <option value="ID_CARDS">College IDs & Cards</option>
+                <option value="KEYS">Keys & Keychains</option>
+                <option value="BAGS_BACKPACKS">Bags & Backpacks</option>
+                <option value="BOOKS_STATIONERY">Books & Notes</option>
+                <option value="CLOTHING_ACCESSORIES">Clothing & Accessories</option>
+                <option value="OTHER">Other Belongings</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Primary Color</label>
+              <input type="text" id="lost-color" placeholder="e.g. Black, Navy Blue, Silver">
+            </div>
+
+            <div class="form-group">
+              <label>Last Seen Campus Location <span class="req">*</span></label>
+              <input type="text" id="lost-location" required placeholder="e.g. Central Library 2nd Floor, Cafeteria, Block B 104">
+            </div>
+
+            <div class="form-group">
+              <label>Date Lost <span class="req">*</span></label>
+              <input type="date" id="lost-date" required>
+            </div>
+
+            <div class="form-group">
+              <label>Approximate Time</label>
+              <input type="text" id="lost-time" placeholder="e.g. 14:30 or Around Afternoon Lunch">
+            </div>
+
+            <div class="form-group">
+              <label>Your Contact Info</label>
+              <input type="text" id="lost-contact" placeholder="Phone or email for recovery contact">
+            </div>
+
+            <div class="form-group col-full">
+              <label>Public Description <span class="req">*</span></label>
+              <textarea id="lost-description" rows="3" required placeholder="Describe appearance, stickers, scratches, brand, case etc."></textarea>
+            </div>
+
+            <div class="form-group col-full">
+              <label>Secret Distinguishing Proof <span class="field-hint">(Private: Only visible to you & Campus Admin for ownership verification)</span></label>
+              <textarea id="lost-secret" rows="2" placeholder="e.g. Lock screen wallpaper photo, serial number ending, internal card IDs, specific bill inside"></textarea>
+            </div>
+
+            <div class="form-group col-full">
+              <label>Upload Item Photo (Optional)</label>
+              <div class="file-dropzone" onclick="document.getElementById('lost-image-input').click()">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <p>Click to select or drop an image file (PNG, JPG)</p>
+                <input type="file" id="lost-image-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 'lost')">
+              </div>
+              <div class="preview-container" id="lost-image-preview">
+                <img id="lost-preview-img" src="" alt="Preview">
+                <span id="lost-image-url-display" style="font-size: 0.8rem; color: var(--primary);"></span>
+              </div>
+            </div>
+
+            <div class="form-group col-full" style="margin-top: 10px;">
+              <button type="submit" class="btn-lg btn-lost" style="width: 100%; justify-content: center;">
+                Submit Lost Item Report
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: REPORT FOUND ITEM -->
+    <section id="tab-report-found" class="tab-content" style="display: none;">
+      <div class="glass-panel form-container">
+        <div class="form-header">
+          <h2>🎁 Report a Found Item</h2>
+          <p>Thank you for being an honest campus member! Help return this item to its rightful owner.</p>
+        </div>
+
+        <form id="form-found" onsubmit="submitFoundReport(event)">
+          <div class="form-grid">
+            <div class="form-group col-full">
+              <label>Item Name <span class="req">*</span></label>
+              <input type="text" id="found-name" required placeholder="e.g. Dell Laptop Charger, Student ID Card, Bike Keys">
+            </div>
+
+            <div class="form-group">
+              <label>Category <span class="req">*</span></label>
+              <select id="found-category" required>
+                <option value="">-- Select Category --</option>
+                <option value="ELECTRONICS">Electronics (Phones, Laptops, Earbuds)</option>
+                <option value="WALLET_PURSE">Wallets & Purses</option>
+                <option value="ID_CARDS">College IDs & Cards</option>
+                <option value="KEYS">Keys & Keychains</option>
+                <option value="BAGS_BACKPACKS">Bags & Backpacks</option>
+                <option value="BOOKS_STATIONERY">Books & Notes</option>
+                <option value="CLOTHING_ACCESSORIES">Clothing & Accessories</option>
+                <option value="OTHER">Other Belongings</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Color</label>
+              <input type="text" id="found-color" placeholder="e.g. Black, White, Red">
+            </div>
+
+            <div class="form-group">
+              <label>Found Location <span class="req">*</span></label>
+              <input type="text" id="found-location" required placeholder="e.g. Central Library Reading Room, Sports Complex, Lab 3">
+            </div>
+
+            <div class="form-group">
+              <label>Current Holding Location <span class="req">*</span> <span class="field-hint">(Where is the item currently kept?)</span></label>
+              <input type="text" id="found-holding" required placeholder="e.g. Front Library Desk (Counter 2), Security Main Gate, Kept with me">
+            </div>
+
+            <div class="form-group">
+              <label>Date Found <span class="req">*</span></label>
+              <input type="date" id="found-date" required>
+            </div>
+
+            <div class="form-group">
+              <label>Approximate Time</label>
+              <input type="text" id="found-time" placeholder="e.g. 16:30 or Evening">
+            </div>
+
+            <div class="form-group">
+              <label>Finder Contact Info</label>
+              <input type="text" id="found-contact" placeholder="Email or desk extension">
+            </div>
+
+            <div class="form-group col-full">
+              <label>Public Description <span class="req">*</span></label>
+              <textarea id="found-description" rows="3" required placeholder="General description visible to students searching the portal."></textarea>
+            </div>
+
+            <div class="form-group col-full">
+              <label>Identifying Verification Notes <span class="field-hint">(Private: Details only owner would know to prevent fraudulent claims)</span></label>
+              <textarea id="found-secret" rows="2" placeholder="e.g. Hidden markings, names written inside, serial numbers, specific stickers."></textarea>
+            </div>
+
+            <div class="form-group col-full">
+              <label>Item Image (Recommended)</label>
+              <div class="file-dropzone" onclick="document.getElementById('found-image-input').click()">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <p>Click to select or drop an image of the found item</p>
+                <input type="file" id="found-image-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 'found')">
+              </div>
+              <div class="preview-container" id="found-image-preview">
+                <img id="found-preview-img" src="" alt="Preview">
+                <span id="found-image-url-display" style="font-size: 0.8rem; color: var(--primary);"></span>
+              </div>
+            </div>
+
+            <div class="form-group col-full" style="margin-top: 10px;">
+              <button type="submit" class="btn-lg btn-found" style="width: 100%; justify-content: center;">
+                Publish Found Item Report
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 4: MY ACTIVITY & MATCHES -->
+    <section id="tab-my-activity" class="tab-content" style="display: none;">
+      <div style="margin-bottom: 24px;">
+        <h2>🎯 My Activity, Matches & Claims</h2>
+        <p style="color: var(--text-muted);">Track your reports, inspect AI-paired matches, and monitor submitted claims.</p>
+      </div>
+
+      <!-- AI Potential Matches Card Deck -->
+      <div class="glass-panel" style="padding: 24px; margin-bottom: 30px; border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="display: flex; align-items: center; gap: 8px; color: #c4b5fd;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+            Smart AI Suggested Matches
+          </h3>
+          <span style="font-size: 0.8rem; color: var(--text-dim);">Real-time cross-referencing</span>
+        </div>
+        <div id="ai-matches-deck">
+          <!-- Dynamic matches rendered here -->
+        </div>
+      </div>
+
+      <!-- My Reported Items Grid -->
+      <h3 style="margin-bottom: 16px;">Items Reported by Me</h3>
+      <div class="items-grid" id="my-items-container" style="margin-bottom: 36px;">
+        <!-- Dynamic user items -->
+      </div>
+
+      <!-- My Claims History -->
+      <h3 style="margin-bottom: 16px;">My Ownership Claims</h3>
+      <div class="glass-panel" style="padding: 20px;">
+        <div class="table-responsive">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Claim Date</th>
+                <th>Proof Provided</th>
+                <th>Status</th>
+                <th>Staff/Admin Notes</th>
+              </tr>
+            </thead>
+            <tbody id="my-claims-table-body">
+              <!-- Dynamic claims -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: ADMIN & STAFF PORTAL -->
+    <section id="tab-admin" class="tab-content" style="display: none;">
+      <div style="margin-bottom: 24px;">
+        <h2>🛡️ Campus Custody & Admin Management</h2>
+        <p style="color: var(--text-muted);">Review pending ownership claims, inspect custody reports, and manage campus items.</p>
+      </div>
+
+      <!-- Admin KPI Stats Deck -->
+      <div class="dashboard-metrics" id="admin-kpi-deck">
+        <div class="glass-panel metric-card">
+          <div class="metric-icon blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <div class="metric-info">
+            <h4>Total Users</h4>
+            <div class="val" id="kpi-users">--</div>
+          </div>
+        </div>
+
+        <div class="glass-panel metric-card">
+          <div class="metric-icon red">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+          <div class="metric-info">
+            <h4>Lost Reports</h4>
+            <div class="val" id="kpi-lost">--</div>
+          </div>
+        </div>
+
+        <div class="glass-panel metric-card">
+          <div class="metric-icon green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"></path><path d="M2 7h20v5H2z"></path><path d="M12 22V7"></path></svg>
+          </div>
+          <div class="metric-info">
+            <h4>Found Items</h4>
+            <div class="val" id="kpi-found">--</div>
+          </div>
+        </div>
+
+        <div class="glass-panel metric-card">
+          <div class="metric-icon purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+          </div>
+          <div class="metric-info">
+            <h4>AI Matches</h4>
+            <div class="val" id="kpi-matches">--</div>
+          </div>
+        </div>
+
+        <div class="glass-panel metric-card">
+          <div class="metric-icon amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <div class="metric-info">
+            <h4>Pending Claims</h4>
+            <div class="val" id="kpi-claims">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Queue: Pending Claims -->
+      <div class="glass-panel" style="padding: 24px; margin-bottom: 30px;">
+        <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          Ownership Claims Verification Queue
+        </h3>
+        <div class="table-responsive">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Claimant</th>
+                <th>Proof Description</th>
+                <th>Claim Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-claims-table-body">
+              <!-- Dynamically populated pending claims -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- All Items Custody Table -->
+      <div class="glass-panel" style="padding: 24px;">
+        <h3 style="margin-bottom: 16px;">Campus Items Moderation & Custody Log</h3>
+        <div class="table-responsive">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Reporter</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-items-table-body">
+              <!-- Dynamically populated item moderation -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: ITEM DETAILS & CLAIM -->
+  <div class="modal-overlay" id="modal-item-detail">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-item-title">Item Details</h3>
+        <button class="modal-close" onclick="closeModal('modal-item-detail')">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-item-body">
+        <!-- Filled dynamically -->
+      </div>
+      <div class="modal-footer" id="modal-item-footer">
+        <button class="btn-sm btn-outline" onclick="closeModal('modal-item-detail')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: AUTH (LOGIN & REGISTER) -->
+  <div class="modal-overlay" id="modal-auth">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 id="auth-modal-title">Sign In to Campus Retrieve</h3>
+        <button class="modal-close" onclick="closeModal('modal-auth')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Quick 1-Click Demo Accounts -->
+        <div class="demo-credentials-box">
+          <h5>⚡ Instant Demo Login (1-Click Test)</h5>
+          <p>Click any pre-seeded demo role to log in instantly:</p>
+          <div class="demo-buttons-row">
+            <button class="btn-sm btn-outline" onclick="quickLogin('rahul@college.edu', 'Student@123')">Student (Rahul)</button>
+            <button class="btn-sm btn-outline" onclick="quickLogin('staff@college.edu', 'Staff@123')">Staff (Prof. Ramesh)</button>
+            <button class="btn-sm btn-primary" onclick="quickLogin('admin@college.edu', 'Admin@123')">Admin</button>
+          </div>
+        </div>
+
+        <!-- Auth Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab-btn active" id="btn-tab-login" onclick="toggleAuthTab('login')">Sign In</button>
+          <button class="auth-tab-btn" id="btn-tab-register" onclick="toggleAuthTab('register')">Create Account</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="form-login" onsubmit="handleLoginSubmit(event)">
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label>College Email</label>
+            <input type="email" id="login-email" required placeholder="e.g. rahul@college.edu">
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Password</label>
+            <input type="password" id="login-password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn-lg btn-primary" style="width: 100%; justify-content: center;">Sign In</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="form-register" onsubmit="handleRegisterSubmit(event)" style="display: none;">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label>Full Name</label>
+            <input type="text" id="reg-name" required placeholder="e.g. John Doe">
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label>College Email</label>
+            <input type="email" id="reg-email" required placeholder="e.g. john@college.edu">
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label>Student / Employee ID</label>
+            <input type="text" id="reg-college-id" required placeholder="e.g. CS202499">
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label>Account Role</label>
+            <select id="reg-role">
+              <option value="ROLE_STUDENT">Student</option>
+              <option value="ROLE_STAFF">Staff Member</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label>Phone Number (Optional)</label>
+            <input type="tel" id="reg-phone" placeholder="e.g. +91 98765 00000">
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Password</label>
+            <input type="password" id="reg-password" required minlength="6" placeholder="At least 6 characters">
+          </div>
+          <button type="submit" class="btn-lg btn-primary" style="width: 100%; justify-content: center;">Register Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CLAIM REVIEW (ADMIN) -->
+  <div class="modal-overlay" id="modal-claim-review">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3>Verify Ownership Claim</h3>
+        <button class="modal-close" onclick="closeModal('modal-claim-review')">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-claim-review-body">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Main Application Script -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

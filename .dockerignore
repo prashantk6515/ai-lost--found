@@ -1,0 +1,8 @@
+target/
+data/
+uploads/
+.git/
+.mvn/
+*.bat
+*.cmd
+HELP.md

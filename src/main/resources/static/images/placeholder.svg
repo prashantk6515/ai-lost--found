@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00b4d8" />
+      <stop offset="100%" stop-color="#0077b6" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="240" fill="url(#grad)" />
+  <circle cx="200" cy="105" r="46" fill="#1e293b" stroke="#334155" stroke-width="2" />
+  <path d="M185 90 h30 v30 h-30 z M180 120 h40 v4 h-40 z" fill="none" stroke="url(#cyanGrad)" stroke-width="3" stroke-linecap="round" />
+  <circle cx="200" cy="98" r="6" fill="#00b4d8" />
+  <text x="200" y="175" font-family="'Outfit', sans-serif" font-size="14" font-weight="600" fill="#94a3b8" text-anchor="middle" letter-spacing="1">CAMPUS RETRIEVE</text>
+  <text x="200" y="195" font-family="'Outfit', sans-serif" font-size="11" fill="#64748b" text-anchor="middle">Official Registry Item</text>
+</svg>
